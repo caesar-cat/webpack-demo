@@ -8,4 +8,7 @@ const PATH = {
 var isProduction = function () {
     return process.env.NODE_ENV === 'production';
 };
-module.exports = { PATH: PATH, isProduction: isProduction}
+module.exports = {
+    PATH: PATH,
+    isProduction: isProduction
+}
