@@ -9,7 +9,7 @@ var baseConfig = require('./webpack-base.config')
 
 module.exports = merge(baseConfig, {
   entry: {
-    app: [path.join(PATH.srcPath, '/index.jsx')],
+    app: [path.join(PATH.srcPath, '/index.js')],
     vendor: ['react', 'react-dom', 'react-router']
   },
   module: {

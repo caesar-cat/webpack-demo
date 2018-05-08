@@ -2,6 +2,7 @@ import React from 'react';
 import { toJS } from 'mobx';
 import { observer, inject } from 'mobx-react';
 import { getUuid } from '../utils/utils';
+import styles from '../style/index.styl';
 
 @inject('ListStore')
 @observer
@@ -28,7 +29,7 @@ export default class List extends React.Component {
     return (
       <div>
         {list.map((item: any) => <p key={getUuid()}>{item}</p>)}
-        add item：<button onClick={this.handleClick}>(click me)</button>
+        add item：<button className={styles.btn} onClick={this.handleClick}>(click me)</button>
       </div>
     );
   }
