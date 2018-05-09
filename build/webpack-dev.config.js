@@ -6,20 +6,37 @@ const PATH = require('./config').PATH
 var baseConfig = require('./webpack-base.config.js')
 
 module.exports = merge(baseConfig, {
+  mode: 'development',
   entry: {
     app: [
       'babel-polyfill',
       'react-hot-loader/patch',
       'webpack-hot-middleware/client?reload=true',
       path.join(PATH.srcPath, '/index')
-    ],
-    vendor: ['react', 'react-dom', 'react-router']
+    ]
   },
-  devtool: 'source-map',
+
   module: {
     rules: [{
-        test: /\.styl$/,
-        loader: 'style-loader!css-loader?modules&localIdentName=[local]-[hash:base64:5]!stylus-loader'
+        test: /\.less$/,
+        use: [{
+            loader: 'css-loader',
+            options: {
+              sourceMap: true, 
+              modules: true,
+              localIdentName: '[hash:base64:5]',
+            }
+          }, {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: true,
+              config: {
+                path: 'postcss.config.js'
+              }
+            }
+          },
+          'less-loader'
+        ]
       },
       {
         test: /\.js[x]?$/,
@@ -42,9 +59,6 @@ module.exports = merge(baseConfig, {
     }),
 
     new webpack.NamedModulesPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.optimize.CommonsChunkPlugin({
-      names: ['vendor', 'mainifest'],
-    }),
+    new webpack.HotModuleReplacementPlugin()
   ]
 })

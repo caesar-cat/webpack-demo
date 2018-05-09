@@ -2,7 +2,7 @@ import React from 'react';
 import { toJS } from 'mobx';
 import { observer, inject } from 'mobx-react';
 import { getUuid } from '../utils/utils';
-import styles from '../style/index.styl';
+import styles from '../style/index.less';
 
 @inject('ListStore')
 @observer

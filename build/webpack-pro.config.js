@@ -1,74 +1,56 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const MinExtractTextPlugin = require("mini-css-extract-plugin");
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const merge = require('webpack-merge');
 const PATH = require('./config').PATH;
 var baseConfig = require('./webpack-base.config')
 
 module.exports = merge(baseConfig, {
+  mode: 'production',
   entry: {
-    app: [path.join(PATH.srcPath, '/index.js')],
-    vendor: ['react', 'react-dom', 'react-router']
+    app: [path.join(PATH.srcPath, '/index.js')]
   },
   module: {
     rules: [{
-      test: /\.styl$/,
-      use: ExtractTextPlugin.extract({
-        fallback: {
-          loader: 'style-loader',
+      test: /\.less$/,
+      use: [
+         MinExtractTextPlugin.loader,
+        {
+          loader: 'css-loader',
           options: {
-            sourceMap: true
+            sourceMap: true,
+            modules: true,
+            localIdentName: '[hash:base64:5]',
+            minimize: true
+          }
+        }, {
+          loader: 'postcss-loader',
+          options: {
+            sourceMap: true,
+            config: {
+              path: 'postcss.config.js'
+            }
           }
         },
-        use: [{
-            loader: 'css-loader',
-            options: {
-              sourceMap: true,
-              modules: true,
-              localIdentName: '[hash:base64:5]',
-              minimize: true
-            }
-          }, {
-            loader: 'postcss-loader',
-            options: {
-              sourceMap: true,
-              config: {
-                path: 'postcss.config.js'
-              }
-            }
-          },
-          'stylus-loader'
-        ]
-      })
+        'less-loader'
+      ]
     }]
   },
   plugins: [
-    new CleanWebpackPlugin(['dist'], {root: PATH.basePath}),
-    new webpack.optimize.UglifyJsPlugin({
-      test: /(\.jsx|\.js)$/,
-      compress: {
-        warnings: false
-      },
+    new CleanWebpackPlugin(['dist'], {
+      root: PATH.basePath
     }),
     new HtmlWebpackPlugin({
       title: 'React Appliction',
       template: path.join(PATH.srcPath, '/index.template.html'),
-      inject: true,
-      minify: {
-        html5: true,
-        collapseWhitespace: true,
-        removeComments: true,
-        removeTagWhitespace: true,
-        removeEmptyAttributes: true,
-        removeStyleLinkTypeAttributes: true,
-      }
+      inject: true
     }),
     new webpack.NamedModulesPlugin(),
-    new ExtractTextPlugin({
-      filename: 'style[hash].css',
-      allChunks: true
+    new MinExtractTextPlugin({
+      filename: 'style.[hash].css',
+      chunkFilename: 'style.[contenthash:12].css'
     })
   ]
 });

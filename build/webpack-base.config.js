@@ -11,6 +11,23 @@ module.exports = {
         publicPath: '/'
     },
 
+    optimization: {
+        splitChunks: {
+            chunks: 'initial',
+            cacheGroups: {
+                vendor: {
+                    test: /node_modules\//,
+                    name: 'vendor',
+                    chunks: "all",
+                    priority: -20
+                }
+            }
+        },
+        runtimeChunk: {
+            name: 'manifest'
+        }
+    },
+
     resolve: {
     	extensions: ['.js', '.jsx']
   	},
@@ -37,14 +54,5 @@ module.exports = {
             }
          }
       ]
-    },
-
-    plugins: [
-        new webpack.NoEmitOnErrorsPlugin(),
-        new webpack.DefinePlugin({
-            'process.env':{
-              'NODE_ENV':isProduction?JSON.stringify('development'): JSON.stringify('development')
-            }
-        }),
-    ]
+    }
 }
